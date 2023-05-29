@@ -24,4 +24,4 @@ jobs:
       run: docker build . --file scripts/Dockerfile --tag archfx/serval:$(date +%s)
       
     - name: Docker Push
-      run: docker push archfx/serval
+      run: docker push archfx/serval:$(date +%s)
