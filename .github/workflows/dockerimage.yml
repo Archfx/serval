@@ -1,6 +1,10 @@
 name: Docker Image CI
 
-on: [push]
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
 
 jobs:
 
@@ -9,8 +13,15 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v1
-    - name: Build the Docker image
+    - uses: actions/checkout@v2
+    - name: docker login
       env:
-        COMMIT: ${{github.sha}}
-      run: docker build . --file scripts/Dockerfile --tag "archfx/serval:$COMMIT"
+        DOCKER_USER: ${{secrets.DOCKER_USER}}
+        DOCKER_PASSWORD: ${{secrets.DOCKER_PASSWORD}}
+      run: |
+        docker login -u $DOCKER_USER -p $DOCKER_PASSWORD 
+    - name: Build the Docker image
+      run: docker build . --file Dockerfile --tag archfx/serval:$(date +%s)
+      
+    - name: Docker Push
+      run: docker push archfx/serval
