@@ -21,7 +21,7 @@ jobs:
       run: |
         docker login -u $DOCKER_USER -p $DOCKER_PASSWORD 
     - name: Build the Docker image
-      run: docker build . --file scripts/Dockerfile --tag archfx/serval:$(date +%s)
+      run: docker build . --file scripts/Dockerfile --tag $DOCKER_USER/serval:$(date +%s)
       
     - name: Docker Push
-      run: docker push archfx/serval:$(date +%s)
+      run: docker push $DOCKER_USER/serval
