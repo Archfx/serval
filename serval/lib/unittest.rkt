@@ -62,6 +62,16 @@
       (time-apply (thunk* (check-exn exn:fail? (thunk (verify/debug-proc proc)))) null))
     (printf "~a ~v (~v ms)\n" (color-succ "[       OK ]") name real-time))))
 
+(define-syntax-rule (check-asserts expr)
+  (let-values ([(result asserted) (with-asserts expr)])
+    (check-unsat? (verify (assert (apply && asserted))))
+    result))
+
+(define-syntax-rule (check-asserts-only expr)
+  (let ([asserted (with-asserts-only expr)])
+    (check-unsat? (verify (assert (apply && asserted))))
+    (void)))
+
 ; random testing
 
 ; generate a random value from a symbolic expression
