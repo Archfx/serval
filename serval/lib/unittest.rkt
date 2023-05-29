@@ -60,10 +60,8 @@
     (define (proc) (begin body ...))
     (define-values (result cpu-time real-time gc-time)
       (time-apply (thunk* (check-exn exn:fail? (thunk (verify/debug-proc proc)))) null))
-    (printf "~a ~v (~v ms)\n" (color-succ "[       OK ]") name real-time))))
-
-(define-syntax-rule (test-case+ name body ...)
-  (test-case name (begin
+    (printf "~a ~v (~v ms)\n" (color-succ "[       OK ]") name real-time)
+    
     (printf "Running test ~v\n" name)
     (time (with-asserts-only
       (parameterize ([current-bitwidth (current-bitwidth)]
@@ -74,6 +72,19 @@
         (check-equal? (asserts) null))))
     (bug-clear!)
     (printf "Finished test ~v\n" name))))
+
+; (define-syntax-rule (test-case+ name body ...)
+;   (test-case name (begin
+;     (printf "Running test ~v\n" name)
+;     (time (with-asserts-only
+;       (parameterize ([current-bitwidth (current-bitwidth)]
+;                      [term-cache (hash-copy (term-cache))]
+;                      [current-solver (current-solver)]
+;                      [current-oracle (oracle (current-oracle))])
+;         (check-asserts-only (begin body ...))
+;         (check-equal? (asserts) null))))
+;     (bug-clear!)
+;     (printf "Finished test ~v\n" name))))
 
 (define-syntax-rule (check-asserts expr)
   (let-values ([(result asserted) (with-asserts expr)])
