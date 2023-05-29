@@ -13,4 +13,4 @@ jobs:
     - name: Build the Docker image
       env:
         COMMIT: ${{github.sha}}
-      run: docker build . --file scripts/Dockerfile --tag "unsat/serval-tools:$COMMIT"
+      run: docker build . --file scripts/Dockerfile --tag "archfx/serval:$COMMIT"
