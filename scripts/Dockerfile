@@ -1,4 +1,4 @@
-FROM ubuntu:20.10
+FROM ubuntu:20.04
 
 ARG RACKET_VERSION=8.1
 ARG ROSETTE_VERSION=9f6322c9da5761da63126c7ef936bd77c210aeec
@@ -33,9 +33,10 @@ RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y \
     vim \
     wget \
     zlib1g-dev \
+    libzmq5 \
  && rm -rf /var/lib/apt/lists/*
 
-WORKDIR /code
+
 
 # Install Racket
 RUN wget "https://mirror.racket-lang.org/installers/${RACKET_VERSION}/racket-${RACKET_VERSION}-x86_64-linux-cs.sh" && \
@@ -47,8 +48,7 @@ RUN wget "https://mirror.racket-lang.org/installers/${RACKET_VERSION}/racket-${R
 RUN git clone 'https://github.com/unicorn-engine/unicorn.git' && \
     cd unicorn && git checkout ${UNICORN_VERSION} && \
     env UNICORN_ARCHS="x86,arm,aarch64" ./make.sh && \
-    env UNICORN_ARCHS="x86,arm,aarch64" ./make.sh install && \
-    cd /code && rm -rfv unicorn
+    env UNICORN_ARCHS="x86,arm,aarch64" ./make.sh install 
 
 # Install Boolector twice with CaDiCal and Lingeling backends
 RUN git clone 'https://github.com/boolector/boolector.git' && \
@@ -74,7 +74,16 @@ RUN git clone 'https://github.com/Z3Prover/z3.git' && \
 RUN git clone 'https://github.com/emina/rosette.git' && \
     cd rosette && git checkout ${ROSETTE_VERSION} && \
     raco pkg install --auto -i --no-setup && raco setup -Dl rosette
+    
+
+RUN pip3 install notebook
+RUN yes | raco pkg install iracket
+
+RUN yes | raco iracket install 
+
+RUN sed -i 's/"--",/"--","-t",/g' /root/.local/share/jupyter/kernels/racket/kernel.json
 
 ADD . /serval
 
 WORKDIR /serval
+RUN yes | raco pkg install 
