@@ -1,5 +1,7 @@
 # Serval
 
+![example workflow](https://github.com/archfx/serval/actions/workflows/dockerimage.yml/badge.svg)
+
 This repository contains the actively developed version of
 Serval.  It may be unstable and break backward compatibility
 with previous versions of Serval.  We recommend using this version
