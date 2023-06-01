@@ -34,6 +34,7 @@ RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y \
     wget \
     zlib1g-dev \
     libzmq5 \
+    device-tree-compiler \
  && rm -rf /var/lib/apt/lists/*
 
 
